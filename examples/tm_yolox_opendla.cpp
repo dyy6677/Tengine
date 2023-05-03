@@ -133,15 +133,15 @@ static void nms_sorted_bboxes(const std::vector<Object>& faceobjects, std::vecto
 static void draw_objects(const cv::Mat& bgr, const std::vector<Object>& objects)
 {
     static const char* class_names[] = {
-        "person", "bicycle", "car", "motorcycle", "airplane", "bus", "train", "truck", "boat", "traffic light",
-        "fire hydrant", "stop sign", "parking meter", "bench", "bird", "cat", "dog", "horse", "sheep", "cow",
-        "elephant", "bear", "zebra", "giraffe", "backpack", "umbrella", "handbag", "tie", "suitcase", "frisbee",
-        "skis", "snowboard", "sports ball", "kite", "baseball bat", "baseball glove", "skateboard", "surfboard",
-        "tennis racket", "bottle", "wine glass", "cup", "fork", "knife", "spoon", "bowl", "banana", "apple",
-        "sandwich", "orange", "broccoli", "carrot", "hot dog", "pizza", "donut", "cake", "chair", "couch",
-        "potted plant", "bed", "dining table", "toilet", "tv", "laptop", "mouse", "remote", "keyboard", "cell phone",
-        "microwave", "oven", "toaster", "sink", "refrigerator", "book", "clock", "vase", "scissors", "teddy bear",
-        "hair drier", "toothbrush"};
+        "Passenger_Ship",
+        "Motorboat",
+        "Fishing_Boat",
+        "Tugboat",
+        "other-ship",
+        "Engineering_Ship",
+        "Liquid_Cargo_Ship",
+        "Dry_Cargo_Ship",
+        "Warship"};
 
     cv::Mat image = bgr.clone();
 
@@ -207,7 +207,7 @@ static void generate_grids_and_stride(const int target_w, const int target_h, st
 static void generate_yolox_proposals(std::vector<GridAndStride> grid_strides, float* feat_ptr, float prob_threshold, std::vector<Object>& objects)
 {
     const int num_grid = 3549;
-    const int num_class = 80;
+    const int num_class = 9;
     const int num_anchors = grid_strides.size();
 
     //const float* feat_ptr = feat_blob;
@@ -248,7 +248,7 @@ static void generate_yolox_proposals(std::vector<GridAndStride> grid_strides, fl
             }
 
         } // class loop
-        feat_ptr += 85;
+        feat_ptr += 14;
 
     } // point anchor loop
 }
@@ -313,7 +313,8 @@ void get_input_data_focus_int8(const char* image_file, int8_t* input_data, int l
                 int out_index = c * letterbox_rows * letterbox_cols + h * letterbox_cols + w;
                 //new release of yolox has deleted the preprocess,
                 //if you use the new version of yolox please use this code ==> input_temp[out_index] = img_data[in_index]
-                input_temp[out_index] = (img_data[in_index] - mean[c]) * scale[c];
+                //input_temp[out_index] = (img_data[in_index] - mean[c]) * scale[c];
+                input_temp[out_index] = img_data[in_index];
             }
         }
     }
